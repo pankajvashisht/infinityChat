@@ -7,9 +7,10 @@ import GradientWithRadialProgressCard from '../../../components/cards/GradientWi
 import { dashBoard } from '../../../Apis/admin';
 import { NotificationManager } from '../../../components/common/react-notifications';
 const DefaultDashboard = React.memo(() => {
-	const [ dashBoardData, setDashboardData ] = useState({
+	const [dashBoardData, setDashboardData] = useState({
 		total_users: 0,
-		total_listern: 0,
+		total_groups: 0,
+		total_user_groups: 0,
 	});
 	useEffect(() => {
 		dashBoard()
@@ -20,7 +21,14 @@ const DefaultDashboard = React.memo(() => {
 			.catch((err) => {
 				if (err.response) {
 					const { data } = err.response;
-					NotificationManager.warning(data.error_message, 'Something went wrong', 3000, null, null, '');
+					NotificationManager.warning(
+						data.error_message,
+						'Something went wrong',
+						3000,
+						null,
+						null,
+						''
+					);
 				}
 			});
 	}, []);
@@ -30,33 +38,41 @@ const DefaultDashboard = React.memo(() => {
 	return (
 		<Fragment>
 			<Row>
-				<Colxx xxs="12">
+				<Colxx xxs='12'>
 					<h1>Dashboard</h1>
-					<Separator className="mb-5" />
+					<Separator className='mb-5' />
 				</Colxx>
 			</Row>
 			<Row>
-				<Colxx lg="12" md="12">
+				<Colxx lg='12' md='12'>
 					<Row>
-						<Colxx lg="6" xl="6" className="mb-6">
-							<NavLink to="/users">
+						<Colxx lg='4' xl='4' className='mb-4'>
+							<NavLink to='/users'>
 								<GradientWithRadialProgressCard
-									icon="iconsminds-male"
+									icon='iconsminds-male'
 									title={`${dashBoardData.total_users} Users`}
-									detail=""
+									detail=''
 								/>
 							</NavLink>
 						</Colxx>
-						<Colxx lg="6" xl="6" className="mb-6">
-							<NavLink to="/listener">
+						<Colxx lg='4' xl='4' className='mb-4'>
+							<NavLink to='/private-groups'>
 								<GradientWithRadialProgressCard
-									icon="iconsminds-scooter"
-									title={`${dashBoardData.total_listern} Listener`}
+									icon='simple-icon-people'
+									title={`${dashBoardData.total_groups} Private Groups`}
 									detail={``}
 								/>
 							</NavLink>
 						</Colxx>
-						
+						<Colxx lg='4' xl='4' className='mb-4'>
+							<NavLink to='/users-groups'>
+								<GradientWithRadialProgressCard
+									icon='simple-icon-people'
+									title={`${dashBoardData.total_user_groups} Users Groups`}
+									detail={``}
+								/>
+							</NavLink>
+						</Colxx>
 					</Row>
 				</Colxx>
 			</Row>

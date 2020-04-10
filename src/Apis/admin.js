@@ -3,7 +3,7 @@ import axios from '../utils/handleAxios';
 export const Adminlogin = ({ email, password }) => {
 	return axios.post(`/login`, {
 		email,
-		password
+		password,
 	});
 };
 
@@ -14,8 +14,8 @@ export const users = (page = 1, limit = 10, q = undefined) => {
 	return axios.get(`/users/${page}/${limit}?q=${q}`);
 };
 
-export const listener = (page = 1, limit = 10, q = undefined) => {
-	return axios.get(`/listener/${page}/${limit}?q=${q}`);
+export const privateGroup = (type, page = 1, limit = 10, q = undefined) => {
+	return axios.get(`/groups/${page}/${limit}?q=${q}&group_type=${type}`);
 };
 
 export const sendPush = (data) => {
@@ -33,11 +33,18 @@ export const addUser = (data) => {
 	form.append('email', data.email);
 	form.append('password', data.password);
 	form.append('profile', data.profile);
-	form.append('profile', data.profile);
-	form.append('description', data.description);
 	form.append('status', 1);
-	form.append('user_type', data.user_type);
 	return axios.post(`/users`, form);
+};
+
+export const addGroup = (data) => {
+	const form = new FormData();
+	form.append('name', data.name);
+	form.append('image', data.profile);
+	form.append('descriptions', data.descriptions);
+	form.append('group_type', 1);
+	form.append('status', 1);
+	return axios.post(`/groups`, form);
 };
 
 export const updateProfile = (data) => {
@@ -62,8 +69,8 @@ export const deleteUser = (data) => {
 		{ data },
 		{
 			headers: {
-				'Content-Type': 'application/x-www-form-urlencoded'
-			}
+				'Content-Type': 'application/x-www-form-urlencoded',
+			},
 		}
 	);
 };

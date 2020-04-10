@@ -3,49 +3,54 @@ const data = [
 		id: 'dashboards',
 		icon: 'iconsminds-shop-4',
 		label: 'Dashboards',
-		to: '/'
+		to: '/',
 	},
 	{
 		id: 'Users',
-		icon: 'simple-icon-people',
+		icon: 'simple-icon-user',
 		label: 'Users',
 		to: '/users',
 		subs: [
 			{
 				icon: 'simple-icon-user',
 				label: 'Users',
-				to: '/users'
+				to: '/users',
 			},
 			{
 				icon: 'iconsminds-add-user',
 				label: 'Add User',
-				to: '/add-user'
-			}
-		]
+				to: '/add-user',
+			},
+		],
 	},
 	{
-		id: 'Listener',
+		id: 'Groups',
 		icon: 'simple-icon-people',
-		label: 'Listener',
-		to: '/listener',
+		label: 'Groups',
+		to: '/groups',
 		subs: [
 			{
 				icon: 'simple-icon-user',
-				label: 'Listener',
-				to: '/listener'
+				label: 'Private Groups',
+				to: '/private-groups',
+			},
+			{
+				icon: 'simple-icon-user',
+				label: 'User Groups',
+				to: '/users-groups',
 			},
 			{
 				icon: 'iconsminds-add-user',
-				label: 'Add Listener',
-				to: '/add-listener'
-			}
-		]
+				label: 'Add Private Groups',
+				to: '/add-private-group',
+			},
+		],
 	},
 	{
 		id: 'App Informations',
 		icon: 'iconsminds-monitor---phone',
 		label: 'App Informations',
-		to: '/app-information'
-	}
+		to: '/app-information',
+	},
 ];
 export default data;

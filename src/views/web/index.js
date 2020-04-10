@@ -1,5 +1,6 @@
-const Web = () => { 
-    window.location.replace('http://ajhookahexpress.com/welcome');
+import React from 'react';
+const Web = () => {
+	return <div>Hello world</div>;
 };
 
 export default Web;
