@@ -108,7 +108,7 @@ const UserGroup = React.memo((props) => {
 								<td>
 									<Link
 										to={{
-											pathname: '/user-details',
+											pathname: '/group-details',
 											state: { post },
 										}}
 										className='d-flex'
