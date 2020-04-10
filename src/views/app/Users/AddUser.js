@@ -1,6 +1,16 @@
 import React, { Fragment, useState, useReducer } from 'react';
 import { Colxx, Separator } from '../../../components/common/CustomBootstrap';
-import { Row, Card, CardBody, Input, CardTitle, FormGroup, Label, Button, Form } from 'reactstrap';
+import {
+	Row,
+	Card,
+	CardBody,
+	Input,
+	CardTitle,
+	FormGroup,
+	Label,
+	Button,
+	Form,
+} from 'reactstrap';
 import { Redirect } from 'react-router-dom';
 import { addUser } from '../../../Apis/admin';
 import { initialState } from './Constants';
@@ -17,21 +27,35 @@ const AddUser = React.memo(() => {
 	const location = (place) => {
 		dispatch({ key: 'address', value: place.formatted_address });
 	};
-	const [ userForm, dispatch ] = useReducer(reducer, initialState);
-	const [ loading, setIsLoading ] = useState(false);
-	const [ redirect, setRedirect ] = useState(false);
+	const [userForm, dispatch] = useReducer(reducer, initialState);
+	const [loading, setIsLoading] = useState(false);
+	const [redirect, setRedirect] = useState(false);
 	const addshop = (event) => {
 		event.preventDefault();
 		setIsLoading(true);
 		addUser(userForm)
 			.then(() => {
 				setRedirect(true);
-				NotificationManager.success('User add successfully', 'Success', 3000, null, null, '');
+				NotificationManager.success(
+					'User add successfully',
+					'Success',
+					3000,
+					null,
+					null,
+					''
+				);
 			})
 			.catch((err) => {
 				if (err.response) {
 					const { data } = err.response;
-					NotificationManager.warning(data.error_message, 'Something went wrong', 3000, null, null, '');
+					NotificationManager.warning(
+						data.error_message,
+						'Something went wrong',
+						3000,
+						null,
+						null,
+						''
+					);
 				}
 			})
 			.finally(() => {
@@ -44,18 +68,18 @@ const AddUser = React.memo(() => {
 	};
 
 	if (redirect) {
-		return <Redirect to="/users" />;
+		return <Redirect to='/users' />;
 	}
 	return (
 		<Fragment>
 			<Row>
-				<Colxx xxs="12">
+				<Colxx xxs='12'>
 					<h1>Add User</h1>
-					<Separator className="mb-5" />
+					<Separator className='mb-5' />
 				</Colxx>
 			</Row>
-			<Row className="mb-4">
-				<Colxx xxs="12">
+			<Row className='mb-4'>
+				<Colxx xxs='12'>
 					<Card>
 						<CardBody>
 							<CardTitle>Add User</CardTitle>
@@ -63,52 +87,75 @@ const AddUser = React.memo(() => {
 								<FormGroup row>
 									<Colxx sm={6}>
 										<FormGroup>
-											<Label for="exampleEmailGrid">Name</Label>
+											<Label for='exampleEmailGrid'>Name</Label>
 											<Input
-												type="text"
+												type='text'
 												required={true}
 												value={userForm.name}
-												onChange={({ target }) => handleInput('name', target.value)}
-												name="name"
-												placeholder="Name"
+												onChange={({ target }) =>
+													handleInput('name', target.value)
+												}
+												name='name'
+												placeholder='Name'
 											/>
 										</FormGroup>
 									</Colxx>
 									<Colxx sm={6}>
 										<FormGroup>
-											<Label for="exampleEmailGrid">Password</Label>
+											<Label for='exampleEmailGrid'>Password</Label>
 											<Input
-												type="password"
+												type='password'
 												required={true}
 												value={userForm.password}
-												onChange={({ target }) => handleInput('password', target.value)}
-												name="password"
-												placeholder="Password"
+												onChange={({ target }) =>
+													handleInput('password', target.value)
+												}
+												name='password'
+												placeholder='Password'
 											/>
 										</FormGroup>
 									</Colxx>
 
 									<Colxx sm={6}>
 										<FormGroup>
-											<Label for="examplePasswordGrid">Email</Label>
+											<Label for='examplePasswordGrid'>Email</Label>
 											<Input
-												type="email"
+												type='email'
 												required={true}
 												value={userForm.email}
-												onChange={({ target }) => handleInput('email', target.value)}
-												name="email"
-												placeholder="Email"
+												onChange={({ target }) =>
+													handleInput('email', target.value)
+												}
+												name='email'
+												placeholder='Email'
 											/>
 										</FormGroup>
 									</Colxx>
 									<Colxx sm={6}>
 										<FormGroup>
-											<Label for="examplePasswordGrid">Profile</Label>
+											<Label for='examplePasswordGrid'>Phone</Label>
 											<Input
-												type="file"
-												onChange={({ target }) => handleInput('profile', target.files[0])}
-												name="profile"
-												placeholder=""
+												type='number'
+												required={true}
+												value={userForm.phone}
+												onChange={({ target }) =>
+													handleInput('phone', target.value)
+												}
+												name='phone'
+												placeholder='Phone'
+											/>
+										</FormGroup>
+									</Colxx>
+									<Colxx sm={6}>
+										<FormGroup>
+											<Label for='examplePasswordGrid'>Profile</Label>
+											<Input
+												type='file'
+												onChange={({ target }) =>
+													handleInput('profile', target.files[0])
+												}
+												name='profile'
+												placeholder=''
 											/>
 										</FormGroup>
 									</Colxx>
@@ -116,9 +163,11 @@ const AddUser = React.memo(() => {
 
 								<Button
 									disabled={loading}
-									type="submit"
-									className={`btn-shadow btn-multiple-state ${loading ? 'show-spinner' : ''}`}
-									color="primary"
+									type='submit'
+									className={`btn-shadow btn-multiple-state ${
+										loading ? 'show-spinner' : ''
+									}`}
+									color='primary'
 								>
 									Save
 								</Button>

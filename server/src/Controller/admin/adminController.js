@@ -86,6 +86,13 @@ class adminController extends ApiController {
 				throw new ApiError('Email Already registered Please use another');
 			}
 		}
+		if (body.phone) {
+			const query = `select * from users where email = '${body.phone}'`;
+			const phone = await DB.first(query);
+			if (phone.length > 0) {
+				throw new ApiError('Phone Already registered Please use another');
+			}
+		}
 		delete body.profile;
 		body.password = app.createHash(body.password);
 		if (Request.files && Request.files.profile) {
