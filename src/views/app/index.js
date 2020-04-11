@@ -25,6 +25,12 @@ const AddUser = React.lazy(() =>
 const AddGroup = React.lazy(() =>
 	import(/* webpackChunkName: "add-group" */ './Groups/AddGroup')
 );
+const EditGroup = React.lazy(() =>
+	import(/* webpackChunkName: "edit-group" */ './Groups/EditGroup')
+);
+const EditUser = React.lazy(() =>
+	import(/* webpackChunkName: "edit-group" */ './Users/EditUser')
+);
 const GroupDetails = React.lazy(() =>
 	import(/* webpackChunkName: "group-details" */ './Groups/GroupDetails')
 );
@@ -59,7 +65,9 @@ class App extends Component {
 							<Route path={`/add-user`} component={AddUser} />} />
 							<Route path={`/add-private-group`} component={AddGroup} />} />
 							<Route path={`/private-groups`} component={PrivateGroup} />} />
+							<Route path={`/edit-group`} component={EditGroup} />} />
 							<Route path={`/users-groups`} component={UserGroup} />} />
+							<Route path={`/edit-user`} component={EditUser} />} />
 							<Route path={`/group-details`} component={GroupDetails} />} />
 							<Route path={`/profile`} component={Profile} />} />
 							<Route

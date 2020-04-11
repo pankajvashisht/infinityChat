@@ -1,20 +1,12 @@
 import React, { Fragment, useState, useReducer } from 'react';
 import { Colxx, Separator } from '../../../components/common/CustomBootstrap';
-import {
-	Row,
-	Card,
-	CardBody,
-	Input,
-	CardTitle,
-	FormGroup,
-	Label,
-	Button,
-	Form,
-} from 'reactstrap';
+import { Row, Card, CardBody, CardTitle } from 'reactstrap';
 import { Redirect } from 'react-router-dom';
-import { addGroup } from '../../../Apis/admin';
+import { addGroup } from 'Apis/admin';
 import { initialState } from './Constants';
-import { NotificationManager } from '../../../components/common/react-notifications';
+import AddGroupFORM from 'containers/Group';
+import Loading from 'components/Loading';
+import { NotificationManager } from 'components/common/react-notifications';
 const AddGroup = React.memo(() => {
 	const reducer = (form, action) => {
 		switch (action.key) {
@@ -80,62 +72,13 @@ const AddGroup = React.memo(() => {
 					<Card>
 						<CardBody>
 							<CardTitle>Add Group</CardTitle>
-							<Form onSubmit={addGroups}>
-								<FormGroup row>
-									<Colxx sm={6}>
-										<FormGroup>
-											<Label for='exampleEmailGrid'>Name</Label>
-											<Input
-												type='text'
-												required={true}
-												value={userForm.name}
-												onChange={({ target }) =>
-													handleInput('name', target.value)
-												}
-												name='name'
-												placeholder='Name'
-											/>
-										</FormGroup>
-									</Colxx>
-									<Colxx sm={6}>
-										<FormGroup>
-											<Label for='examplePasswordGrid'>Group Image</Label>
-											<Input
-												type='file'
-												onChange={({ target }) =>
-													handleInput('profile', target.files[0])
-												}
-												name='profile'
-												placeholder=''
-											/>
-										</FormGroup>
-									</Colxx>
-									<Colxx sm={12}>
-										<FormGroup>
-											<Label for='examplePasswordGrid'>Description</Label>
-											<Input
-												type='teaxtarea'
-												onChange={({ target: { value } }) =>
-													handleInput('descriptions', value)
-												}
-												name='descriptions'
-												placeholder='descriptions'
-											/>
-										</FormGroup>
-									</Colxx>
-								</FormGroup>
-
-								<Button
-									disabled={loading}
-									type='submit'
-									className={`btn-shadow btn-multiple-state ${
-										loading ? 'show-spinner' : ''
-									}`}
-									color='primary'
-								>
-									Save
-								</Button>
-							</Form>
+							<Loading loading={loading} />
+							<AddGroupFORM
+								onSubmit={addGroups}
+								handleInput={handleInput}
+								userForm={userForm}
+								loading={loading}
+							/>
 						</CardBody>
 					</Card>
 				</Colxx>

@@ -105,6 +105,34 @@ class adminController extends ApiController {
 		return await DB.save('users', body);
 	}
 
+	async editUser(Request) {
+		const { body } = Request;
+		if (body.email) {
+			const query = `select * from users where email = '${body.email}' and id != ${body.id}`;
+			const email = await DB.first(query);
+			if (email.length > 0) {
+				throw new ApiError('Email Already registered Please use another');
+			}
+		}
+		if (body.phone) {
+			const query = `select * from users where email = '${body.phone}' and id != ${body.id}`;
+			const phone = await DB.first(query);
+			if (phone.length > 0) {
+				throw new ApiError('Phone Already registered Please use another');
+			}
+		}
+		delete body.profile;
+		body.password = app.createHash(body.password);
+		if (Request.files && Request.files.profile) {
+			body.profile = await app.upload_pic_with_await(Request.files.profile);
+		}
+		delete body.licence;
+		if (Request.files && Request.files.licence) {
+			body.licence = await app.upload_pic_with_await(Request.files.licence);
+		}
+		return await DB.save('users', body);
+	}
+
 	async createGroup(Request) {
 		const { body } = Request;
 		delete body.image;

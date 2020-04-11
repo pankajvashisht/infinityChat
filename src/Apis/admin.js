@@ -33,8 +33,29 @@ export const addUser = (data) => {
 	form.append('email', data.email);
 	form.append('password', data.password);
 	form.append('profile', data.profile);
+	form.append('phone', data.phone);
 	form.append('status', 1);
 	return axios.post(`/users`, form);
+};
+
+export const editGroup = (data) => {
+	const form = new FormData();
+	form.append('id', data.id);
+	form.append('name', data.name);
+	form.append('image', data.profile);
+	form.append('descriptions', data.descriptions);
+	return axios.post(`/groups`, form);
+};
+
+export const editUserData = (data) => {
+	const form = new FormData();
+	form.append('id', data.id);
+	form.append('name', data.name);
+	form.append('email', data.email);
+	form.append('password', data.password);
+	form.append('profile', data.profile);
+	form.append('phone', data.phone);
+	return axios.put(`/edit-user`, form);
 };
 
 export const addGroup = (data) => {

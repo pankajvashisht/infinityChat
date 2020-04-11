@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import { Card, CardHeader, CardBody } from 'reactstrap';
-import StatusUpdate from '../../components/UpdateStatus';
+import StatusUpdate from 'components/UpdateStatus';
 const UserDetails = (props) => {
 	const statusMessage = {
 		1: 'Approved',
@@ -29,10 +29,7 @@ const UserDetails = (props) => {
 				<div>
 					<b> Phone </b> : {userDetails.phone}
 				</div>
-				<hr />
-				<div>
-					<b> Description </b> : {userDetails.description}
-				</div>
+
 				{userDetails.profile && (
 					<>
 						<hr />

@@ -1,13 +1,12 @@
 import React, { Fragment, useState, useReducer } from 'react';
-import { Colxx, Separator } from 'components/common/CustomBootstrap';
+import { Colxx, Separator } from '../../../components/common/CustomBootstrap';
 import { Row, Card, CardBody, CardTitle } from 'reactstrap';
 import { Redirect } from 'react-router-dom';
-import { addUser } from 'Apis/admin';
-import { initialState } from './Constants';
-import UserForm from 'containers/Users';
+import { editGroup } from 'Apis/admin';
+import AddGroupFORM from 'containers/Group';
 import Loading from 'components/Loading';
 import { NotificationManager } from 'components/common/react-notifications';
-const AddUser = React.memo(() => {
+const EditGroup = React.memo((props) => {
 	const reducer = (form, action) => {
 		switch (action.key) {
 			case action.key:
@@ -16,20 +15,19 @@ const AddUser = React.memo(() => {
 				throw new Error('Unexpected action');
 		}
 	};
-	const location = (place) => {
-		dispatch({ key: 'address', value: place.formatted_address });
-	};
-	const [userForm, dispatch] = useReducer(reducer, initialState);
+	const [userForm, dispatch] = useReducer(reducer, {
+		...props.location.state.post,
+	});
 	const [loading, setIsLoading] = useState(false);
 	const [redirect, setRedirect] = useState(false);
-	const addUserForm = (event) => {
+	const addGroups = (event) => {
 		event.preventDefault();
 		setIsLoading(true);
-		addUser(userForm)
+		editGroup(userForm)
 			.then(() => {
 				setRedirect(true);
 				NotificationManager.success(
-					'User add successfully',
+					'Group Edit successfully',
 					'Success',
 					3000,
 					null,
@@ -60,13 +58,13 @@ const AddUser = React.memo(() => {
 	};
 
 	if (redirect) {
-		return <Redirect to='/users' />;
+		return <Redirect to='/private-groups' />;
 	}
 	return (
 		<Fragment>
 			<Row>
 				<Colxx xxs='12'>
-					<h1>Add User</h1>
+					<h1>Edit Group ({userForm.name})</h1>
 					<Separator className='mb-5' />
 				</Colxx>
 			</Row>
@@ -74,13 +72,13 @@ const AddUser = React.memo(() => {
 				<Colxx xxs='12'>
 					<Card>
 						<CardBody>
-							<CardTitle>Add User</CardTitle>
+							<CardTitle>Edit Group</CardTitle>
 							<Loading loading={loading} />
-							<UserForm
-								onSubmit={addUserForm}
-								loading={loading}
-								userForm={userForm}
+							<AddGroupFORM
+								onSubmit={addGroups}
 								handleInput={handleInput}
+								userForm={userForm}
+								loading={loading}
 							/>
 						</CardBody>
 					</Card>
@@ -90,4 +88,4 @@ const AddUser = React.memo(() => {
 	);
 });
 
-export default AddUser;
+export default EditGroup;

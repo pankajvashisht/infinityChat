@@ -143,7 +143,26 @@ const PrivateGroup = React.memo((props) => {
 								</td>
 								<td>{convertDate(post.created)}</td>
 								<td>
+									<Link
+										to={{
+											pathname: '/group-details',
+											state: { post },
+										}}
+										className='btn btn-primary btn-sm'
+									>
+										View
+									</Link>{' '}
+									<Link
+										to={{
+											pathname: '/edit-group',
+											state: { post },
+										}}
+										className='btn btn-info btn-sm'
+									>
+										Edit
+									</Link>{' '}
 									<DeleteData
+										classes='btn-sm'
 										table='groups'
 										data={post.id}
 										ondelete={() => DeleteDataLocal(key)}
