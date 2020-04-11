@@ -155,9 +155,6 @@ class ApiController {
 				'authorization_key',
 			],
 		});
-		if (result.document.length > 0) {
-			result.document = appURL + 'uploads/' + result.document;
-		}
 		return result;
 	}
 }
