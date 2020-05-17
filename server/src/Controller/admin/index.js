@@ -1,5 +1,6 @@
-const adminController = require("./adminController");
-
+const adminController = require('./adminController');
+const ArticleController = require('./ArticleController');
 module.exports = {
-    adminController
-}
+	adminController,
+	ArticleController,
+};

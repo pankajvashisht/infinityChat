@@ -1,13 +1,11 @@
 import React, { Fragment, useState, useReducer } from 'react';
-import { Colxx, Separator } from '../../../components/common/CustomBootstrap';
+import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import { Row, Card, CardBody, CardTitle } from 'reactstrap';
-import { Redirect } from 'react-router-dom';
-import { addGroup } from 'Apis/admin';
+import { addArticle as AddNewArticle } from 'Apis/admin';
 import { initialState } from './Constants';
-import AddGroupFORM from 'containers/Group';
-import Loading from 'components/Loading';
+import Articles from 'containers/forms/Articles';
 import { NotificationManager } from 'components/common/react-notifications';
-const AddGroup = React.memo(() => {
+const AddArticle = React.memo(({ history }) => {
 	const reducer = (form, action) => {
 		switch (action.key) {
 			case action.key:
@@ -16,17 +14,16 @@ const AddGroup = React.memo(() => {
 				throw new Error('Unexpected action');
 		}
 	};
-	const [userForm, dispatch] = useReducer(reducer, initialState);
+	const [articleForm, dispatch] = useReducer(reducer, initialState);
 	const [loading, setIsLoading] = useState(false);
-	const [redirect, setRedirect] = useState(false);
-	const addGroups = (event) => {
+	const addArticle = (event) => {
 		event.preventDefault();
 		setIsLoading(true);
-		addGroup(userForm)
+		AddNewArticle(articleForm)
 			.then(() => {
-				setRedirect(true);
+				history.push('/articles');
 				NotificationManager.success(
-					'Private Group add successfully',
+					'Article added successfully',
 					'Success',
 					3000,
 					null,
@@ -55,15 +52,11 @@ const AddGroup = React.memo(() => {
 	const handleInput = (key, value) => {
 		dispatch({ key, value });
 	};
-
-	if (redirect) {
-		return <Redirect to='/private-groups' />;
-	}
 	return (
 		<Fragment>
 			<Row>
 				<Colxx xxs='12'>
-					<h1>Add Group</h1>
+					<h1> Add Article</h1>
 					<Separator className='mb-5' />
 				</Colxx>
 			</Row>
@@ -71,13 +64,12 @@ const AddGroup = React.memo(() => {
 				<Colxx xxs='12'>
 					<Card>
 						<CardBody>
-							<CardTitle>Add Group</CardTitle>
-							<Loading loading={loading} />
-							<AddGroupFORM
-								onSubmit={addGroups}
-								handleInput={handleInput}
-								userForm={userForm}
+							<CardTitle>Add Article</CardTitle>
+							<Articles
+								onSubmit={addArticle}
 								loading={loading}
+								ArticleForm={articleForm}
+								handleInput={handleInput}
 							/>
 						</CardBody>
 					</Card>
@@ -87,4 +79,4 @@ const AddGroup = React.memo(() => {
 	);
 });
 
-export default AddGroup;
+export default AddArticle;

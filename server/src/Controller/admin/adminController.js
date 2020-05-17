@@ -233,16 +233,14 @@ class adminController extends ApiController {
 
 	async dashboard() {
 		const users = await DB.first('select count(id) as total from users');
-		const groups = await DB.first(
-			'select count(id) as total from groups where group_type=1'
+		const categories = await DB.first(
+			'select count(id) as total from categories'
 		);
-		const userGroup = await DB.first(
-			'select count(id) as total from groups where group_type=0'
-		);
+		const articles = await DB.first('select count(id) as total from articles');
 		return {
 			total_users: users[0].total,
-			total_groups: groups[0].total,
-			total_user_groups: userGroup[0].total,
+			total_categories: categories[0].total,
+			total_articles: articles[0].total,
 		};
 	}
 

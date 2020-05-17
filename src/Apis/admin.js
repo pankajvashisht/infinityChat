@@ -14,10 +14,6 @@ export const users = (page = 1, limit = 10, q = undefined) => {
 	return axios.get(`/users/${page}/${limit}?q=${q}`);
 };
 
-export const privateGroup = (type, page = 1, limit = 10, q = undefined) => {
-	return axios.get(`/groups/${page}/${limit}?q=${q}&group_type=${type}`);
-};
-
 export const sendPush = (data) => {
 	return axios.post(`/send-push`, data);
 };
@@ -38,13 +34,50 @@ export const addUser = (data) => {
 	return axios.post(`/users`, form);
 };
 
-export const editGroup = (data) => {
+export const addCategory = (data) => {
 	const form = new FormData();
-	form.append('id', data.id);
 	form.append('name', data.name);
-	form.append('image', data.profile);
-	form.append('descriptions', data.descriptions);
-	return axios.post(`/groups`, form);
+	form.append('image', data.image);
+	form.append('description', data.description);
+	form.append('status', 1);
+	return axios.post(`/category`, form);
+};
+
+export const editCategory = (data) => {
+	const form = new FormData();
+	form.append('name', data.name);
+	form.append('image', data.image);
+	form.append('description', data.description);
+	form.append('id', data.id);
+	return axios.put(`/category`, form);
+};
+
+export const getCategory = (page = 1, limit = 10, q = undefined) => {
+	return axios.get(`/category/${page}/${limit}?q=${q}`);
+};
+
+export const getArticle = (page = 1, limit = 10, q = undefined) => {
+	return axios.get(`/articles/${page}/${limit}?q=${q}`);
+};
+
+export const addArticle = (data) => {
+	const form = new FormData();
+	form.append('name', data.name);
+	form.append('image', data.image);
+	form.append('description', data.description);
+	form.append('category_id', data.category_id);
+	form.append('status', 1);
+	return axios.post(`/articles`, form);
+};
+
+export const editArticle = (data) => {
+	const form = new FormData();
+	form.append('name', data.name);
+	form.append('image', data.image);
+	form.append('description', data.description);
+	form.append('category_id', data.category_id);
+	form.append('id', data.id);
+	return axios.post(`/articles`, form);
 };
 
 export const editUserData = (data) => {
@@ -56,16 +89,6 @@ export const editUserData = (data) => {
 	form.append('profile', data.profile);
 	form.append('phone', data.phone);
 	return axios.put(`/edit-user`, form);
-};
-
-export const addGroup = (data) => {
-	const form = new FormData();
-	form.append('name', data.name);
-	form.append('image', data.profile);
-	form.append('descriptions', data.descriptions);
-	form.append('group_type', 1);
-	form.append('status', 1);
-	return axios.post(`/groups`, form);
 };
 
 export const updateProfile = (data) => {

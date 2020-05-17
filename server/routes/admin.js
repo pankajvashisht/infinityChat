@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { adminController } = require('../src/Controller/admin/index');
+const {
+	adminController,
+	ArticleController,
+} = require('../src/Controller/admin/index');
 const { cross, AdminAuth } = require('../src/middleware/index');
 const response = require('../libary/Response');
 const { login } = require('../src/Request/adminRequest');
@@ -21,11 +24,18 @@ router
 	.put(response(admin.updateData))
 	.delete(response(admin.deleteData));
 router
-	.route('/groups/:offset([0-9]+)?/:limit([0-9]+)?')
-	.get(response(admin.getGroups))
-	.post(response(admin.createGroup))
-	.put(response(admin.createGroup))
+	.route('/category/:offset([0-9]+)?/:limit([0-9]+)?')
+	.get(response(ArticleController.allCategory))
+	.post(response(ArticleController.addCategory))
+	.put(response(ArticleController.addCategory))
 	.delete(response(admin.deleteData));
+router
+	.route('/articles/:offset([0-9]+)?/:limit([0-9]+)?')
+	.get(response(ArticleController.getArticle))
+	.post(response(ArticleController.addArticle))
+	.put(response(ArticleController.addArticle))
+	.delete(response(admin.deleteData));
+
 router.post('/admin-profile', response(admin.adminProfile));
 
 router

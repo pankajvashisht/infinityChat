@@ -1,37 +1,30 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import ListPageHeading from '../../../containers/pages/ListPageHeading';
-import Pagination from '../../../containers/pages/Pagination';
-import { privateGroup } from '../../../Apis/admin';
-import { NotificationManager } from '../../../components/common/react-notifications';
+import ListPageHeading from 'containers/pages/ListPageHeading';
+import Pagination from 'containers/pages/Pagination';
+import Actions from 'components/Actions';
+import ImagePreView from 'components/PerviewImage/ModalView';
+import { getCategory } from 'Apis/admin';
+import { NotificationManager } from 'components/common/react-notifications';
 import { Link } from 'react-router-dom';
-import StatusUpdate from '../../../components/UpdateStatus';
-import DeleteData from '../../../components/DeleteData';
-import { convertDate } from '../../../constants/defaultValues';
-const additional = {
-	currentPage: 1,
-	totalItemCount: 0,
-	totalPage: 1,
-	search: '',
-	pageSizes: [10, 20, 50, 100],
-};
-const statusMessage = {
-	1: 'Active',
-	0: 'Deactive',
-};
-const PrivateGroup = React.memo((props) => {
+import StatusUpdate from 'components/UpdateStatus';
+import { convertDate } from 'constants/defaultValues';
+import { additional } from './Constants';
+const Categories = React.memo(({ match, history }) => {
 	const [pageInfo, setPageInfo] = useState(additional);
-	const [totalPosts, setTotalPost] = useState([]);
+	const [totalCategories, setTotalCategories] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [selectedPageSize, setSelectedPageSize] = useState(10);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [searchText, setSearchtext] = useState(undefined);
+	const [viewImage, setViewImage] = useState(false);
+	const [imagePath, setImagePath] = useState('');
 	useEffect(() => {
-		privateGroup(1, currentPage, selectedPageSize, searchText)
+		getCategory(currentPage, selectedPageSize, searchText)
 			.then((res) => {
 				const { data } = res;
 				const { result, pagination } = data.data;
 				setIsLoading(false);
-				setTotalPost(result);
+				setTotalCategories(result);
 				additional.totalItemCount = pagination.totalRecord;
 				additional.selectedPageSize = pagination.limit;
 				additional.totalPage = pagination.totalPage;
@@ -62,14 +55,13 @@ const PrivateGroup = React.memo((props) => {
 	const onChangePage = (value) => {
 		setCurrentPage(value);
 	};
-	const onCheckItem = (key, value) => {};
 	const DeleteDataLocal = (key) => {
-		totalPosts.splice(key, 1);
-		setTotalPost([...totalPosts]);
+		totalCategories.splice(key, 1);
+		setTotalCategories([...totalCategories]);
 	};
 	const updateLocal = (value, key) => {
-		totalPosts[key] = value;
-		setTotalPost([...totalPosts]);
+		totalCategories[key] = value;
+		setTotalCategories([...totalCategories]);
 	};
 	const startIndex = (currentPage - 1) * selectedPageSize;
 	const endIndex = currentPage * selectedPageSize;
@@ -78,8 +70,11 @@ const PrivateGroup = React.memo((props) => {
 	) : (
 		<Fragment>
 			<ListPageHeading
-				match={props.match}
-				heading='Private Groups'
+				match={match}
+				heading='Categories'
+				addShow
+				Addname='+ Add New Category'
+				onClick={() => history.push('/add-category')}
 				changePageSize={changePageSize}
 				selectedPageSize={selectedPageSize}
 				totalItemCount={pageInfo.totalItemCount}
@@ -101,80 +96,64 @@ const PrivateGroup = React.memo((props) => {
 					</tr>
 				</thead>
 				<tbody>
-					{totalPosts.map((post, key) => (
+					{totalCategories.map((category, key) => (
 						<>
-							<tr>
+							<tr key={key}>
 								<td>{key + 1}</td>
 								<td>
 									<Link
 										to={{
-											pathname: '/group-details',
-											state: { post },
+											pathname: '/edit-category',
+											state: { category },
 										}}
 										className='d-flex'
 									>
 										{' '}
-										{post.name}
+										{category.name}
 									</Link>
 								</td>
 								<td>
-									<Link
-										to={{
-											pathname: '/group-details',
-											state: { post },
+									<img
+										onClick={() => {
+											setImagePath(category.image || '/assets/img/logo.jpeg');
+											setViewImage(true);
 										}}
-										className='d-flex'
-									>
-										<img
-											alt={post.name}
-											src={post.image}
-											className='list-thumbnail responsive border-0 card-img-left'
-										/>
-									</Link>
+										alt={category.name}
+										src={category.image || '/assets/img/logo.jpeg'}
+										className='list-thumbnail responsive border-0 card-img-left'
+									/>
 								</td>
 								<td>
 									<StatusUpdate
-										statusMessage={statusMessage}
-										table='users'
+										table='categories'
 										onUpdate={(data) => updateLocal(data, key)}
-										data={post}
-										updateKey='status'
+										data={category}
 									/>
 								</td>
-								<td>{convertDate(post.created)}</td>
+								<td>{convertDate(category.created)}</td>
 								<td>
-									<Link
-										to={{
-											pathname: '/group-details',
-											state: { post },
-										}}
-										className='btn btn-primary btn-sm'
-									>
-										View
-									</Link>{' '}
-									<Link
-										to={{
-											pathname: '/edit-group',
-											state: { post },
-										}}
-										className='btn btn-info btn-sm'
-									>
-										Edit
-									</Link>{' '}
-									<DeleteData
-										classes='btn-sm'
-										table='groups'
-										data={post.id}
-										ondelete={() => DeleteDataLocal(key)}
-									>
-										Delete
-									</DeleteData>
+									<Actions
+										key={key}
+										isView={false}
+										isEdit={true}
+										table='categories'
+										view='Category'
+										onDelete={DeleteDataLocal}
+										data={category}
+										editPath='/edit-category'
+										name='category'
+									/>
 								</td>
 							</tr>
 						</>
 					))}
 				</tbody>
 			</table>
+			<ImagePreView
+				imagePath={imagePath}
+				showModel={viewImage}
+				onClose={(value) => setViewImage(value)}
+			/>
 			<Pagination
 				currentPage={currentPage}
 				totalPage={pageInfo.totalPage}
@@ -184,4 +163,4 @@ const PrivateGroup = React.memo((props) => {
 	);
 });
 
-export default PrivateGroup;
+export default Categories;

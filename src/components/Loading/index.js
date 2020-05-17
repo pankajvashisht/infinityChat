@@ -7,7 +7,7 @@ const Loading = ({ loading }) => (
 		<Loader
 			visible={loading}
 			type='Puff'
-			color='#00BFFF'
+			color='#0D7DC2'
 			height={100}
 			width={100}
 		/>

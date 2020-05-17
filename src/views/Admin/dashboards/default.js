@@ -2,15 +2,15 @@ import React, { Fragment, useState, useEffect } from 'react';
 import { injectIntl } from 'react-intl';
 import { Row } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
-import { Colxx, Separator } from '../../../components/common/CustomBootstrap';
-import GradientWithRadialProgressCard from '../../../components/cards/GradientWithRadialProgressCard';
-import { dashBoard } from '../../../Apis/admin';
-import { NotificationManager } from '../../../components/common/react-notifications';
+import { Colxx, Separator } from 'components/common/CustomBootstrap';
+import GradientWithRadialProgressCard from 'components/cards/GradientWithRadialProgressCard';
+import { dashBoard } from 'Apis/admin';
+import { NotificationManager } from 'components/common/react-notifications';
 const DefaultDashboard = React.memo(() => {
 	const [dashBoardData, setDashboardData] = useState({
 		total_users: 0,
-		total_groups: 0,
-		total_user_groups: 0,
+		total_categories: 0,
+		total_articles: 0,
 	});
 	useEffect(() => {
 		dashBoard()
@@ -56,19 +56,19 @@ const DefaultDashboard = React.memo(() => {
 							</NavLink>
 						</Colxx>
 						<Colxx lg='4' xl='4' className='mb-4'>
-							<NavLink to='/private-groups'>
+							<NavLink to='/categories'>
 								<GradientWithRadialProgressCard
-									icon='simple-icon-people'
-									title={`${dashBoardData.total_groups} Private Groups`}
+									icon='simple-icon-direction'
+									title={`${dashBoardData.total_categories} Categories`}
 									detail={``}
 								/>
 							</NavLink>
 						</Colxx>
 						<Colxx lg='4' xl='4' className='mb-4'>
-							<NavLink to='/users-groups'>
+							<NavLink to='/articles'>
 								<GradientWithRadialProgressCard
-									icon='simple-icon-people'
-									title={`${dashBoardData.total_user_groups} Users Groups`}
+									icon='iconsminds-files'
+									title={`${dashBoardData.total_articles} Articles`}
 									detail={``}
 								/>
 							</NavLink>

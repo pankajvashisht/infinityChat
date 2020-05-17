@@ -1,37 +1,30 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import ListPageHeading from '../../../containers/pages/ListPageHeading';
-import Pagination from '../../../containers/pages/Pagination';
-import { privateGroup } from '../../../Apis/admin';
-import { NotificationManager } from '../../../components/common/react-notifications';
+import ListPageHeading from 'containers/pages/ListPageHeading';
+import Pagination from 'containers/pages/Pagination';
+import Actions from 'components/Actions';
+import ImagePreView from 'components/PerviewImage/ModalView';
+import { getArticle } from 'Apis/admin';
+import { NotificationManager } from 'components/common/react-notifications';
 import { Link } from 'react-router-dom';
-import StatusUpdate from '../../../components/UpdateStatus';
-import DeleteData from '../../../components/DeleteData';
-import { convertDate } from '../../../constants/defaultValues';
-const additional = {
-	currentPage: 1,
-	totalItemCount: 0,
-	totalPage: 1,
-	search: '',
-	pageSizes: [10, 20, 50, 100],
-};
-const statusMessage = {
-	1: 'Active',
-	0: 'Deactive',
-};
-const UserGroup = React.memo((props) => {
+import StatusUpdate from 'components/UpdateStatus';
+import { convertDate } from 'constants/defaultValues';
+import { additional } from './Constants';
+const Articles = React.memo(({ match, history }) => {
 	const [pageInfo, setPageInfo] = useState(additional);
-	const [totalPosts, setTotalPost] = useState([]);
+	const [totalArticles, setTotalArticles] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [selectedPageSize, setSelectedPageSize] = useState(10);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [searchText, setSearchtext] = useState(undefined);
+	const [viewImage, setViewImage] = useState(false);
+	const [imagePath, setImagePath] = useState('');
 	useEffect(() => {
-		privateGroup(0, currentPage, selectedPageSize, searchText)
+		getArticle(currentPage, selectedPageSize, searchText)
 			.then((res) => {
 				const { data } = res;
 				const { result, pagination } = data.data;
 				setIsLoading(false);
-				setTotalPost(result);
+				setTotalArticles(result);
 				additional.totalItemCount = pagination.totalRecord;
 				additional.selectedPageSize = pagination.limit;
 				additional.totalPage = pagination.totalPage;
@@ -62,14 +55,13 @@ const UserGroup = React.memo((props) => {
 	const onChangePage = (value) => {
 		setCurrentPage(value);
 	};
-	const onCheckItem = (key, value) => {};
 	const DeleteDataLocal = (key) => {
-		totalPosts.splice(key, 1);
-		setTotalPost([...totalPosts]);
+		totalArticles.splice(key, 1);
+		setTotalArticles([...totalArticles]);
 	};
 	const updateLocal = (value, key) => {
-		totalPosts[key] = value;
-		setTotalPost([...totalPosts]);
+		totalArticles[key] = value;
+		setTotalArticles([...totalArticles]);
 	};
 	const startIndex = (currentPage - 1) * selectedPageSize;
 	const endIndex = currentPage * selectedPageSize;
@@ -78,8 +70,11 @@ const UserGroup = React.memo((props) => {
 	) : (
 		<Fragment>
 			<ListPageHeading
-				match={props.match}
-				heading='Private Groups'
+				match={match}
+				heading='Article'
+				addShow
+				Addname='+ Add New Articles'
+				onClick={() => history.push('/add-article')}
 				changePageSize={changePageSize}
 				selectedPageSize={selectedPageSize}
 				totalItemCount={pageInfo.totalItemCount}
@@ -95,67 +90,72 @@ const UserGroup = React.memo((props) => {
 						<th>#</th>
 						<th>Name</th>
 						<th>Image</th>
+						<th>Category Name</th>
 						<th>Status</th>
 						<th>Created Date</th>
 						<th>Action</th>
 					</tr>
 				</thead>
 				<tbody>
-					{totalPosts.map((post, key) => (
+					{totalArticles.map((article, key) => (
 						<>
-							<tr>
+							<tr key={key}>
 								<td>{key + 1}</td>
 								<td>
 									<Link
 										to={{
-											pathname: '/group-details',
-											state: { post },
+											pathname: '/edit-article',
+											state: { article },
 										}}
 										className='d-flex'
 									>
 										{' '}
-										{post.name}
+										{article.name}
 									</Link>
 								</td>
 								<td>
-									<Link
-										to={{
-											pathname: '/group-details',
-											state: { post },
+									<img
+										onClick={() => {
+											setImagePath(article.image || '/assets/img/logo.jpeg');
+											setViewImage(true);
 										}}
-										className='d-flex'
-									>
-										<img
-											alt={post.name}
-											src={post.image}
-											className='list-thumbnail responsive border-0 card-img-left'
-										/>
-									</Link>
-								</td>
-								<td>
-									<StatusUpdate
-										statusMessage={statusMessage}
-										table='users'
-										onUpdate={(data) => updateLocal(data, key)}
-										data={post}
-										updateKey='status'
+										alt={article.name}
+										src={article.image || '/assets/img/logo.jpeg'}
+										className='list-thumbnail responsive border-0 card-img-left'
 									/>
 								</td>
-								<td>{convertDate(post.created)}</td>
+								<td>{article.category_name}</td>
 								<td>
-									<DeleteData
-										table='groups'
-										data={post.id}
-										ondelete={() => DeleteDataLocal(key)}
-									>
-										Delete
-									</DeleteData>
+									<StatusUpdate
+										table='articles'
+										onUpdate={(data) => updateLocal(data, key)}
+										data={article}
+									/>
+								</td>
+								<td>{convertDate(article.created)}</td>
+								<td>
+									<Actions
+										key={key}
+										isView={false}
+										isEdit={true}
+										table='articles'
+										view='Article'
+										onDelete={DeleteDataLocal}
+										data={article}
+										editPath='/edit-article'
+										name='article'
+									/>
 								</td>
 							</tr>
 						</>
 					))}
 				</tbody>
 			</table>
+			<ImagePreView
+				imagePath={imagePath}
+				showModel={viewImage}
+				onClose={(value) => setViewImage(value)}
+			/>
 			<Pagination
 				currentPage={currentPage}
 				totalPage={pageInfo.totalPage}
@@ -165,4 +165,4 @@ const UserGroup = React.memo((props) => {
 	);
 });
 
-export default UserGroup;
+export default Articles;
