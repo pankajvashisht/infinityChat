@@ -44,6 +44,16 @@ const EditArticle = React.lazy(() =>
 const Article = React.lazy(() =>
 	import(/* webpackChunkName: "article-listing" */ './Article')
 );
+
+const AddGoal = React.lazy(() =>
+	import(/* webpackChunkName: "add-goal" */ './Goals/AddGoal')
+);
+const EditGoal = React.lazy(() =>
+	import(/* webpackChunkName: "edit-goal" */ './Goals/EditGoal')
+);
+const Goals = React.lazy(() =>
+	import(/* webpackChunkName: "goal-listing" */ './Goals')
+);
 const Profile = React.lazy(() =>
 	import(/* webpackChunkName: "admin-profile" */ './profile')
 );
@@ -74,6 +84,9 @@ class App extends Component {
 							<Route path='/add-article' component={AddArticle} />} />
 							<Route path='/edit-article' component={EditArticle} />} />
 							<Route path='/articles' component={Article} />} />
+							<Route path='/add-goal' component={AddGoal} />} />
+							<Route path='/edit-goal' component={EditGoal} />} />
+							<Route path='/goals' component={Goals} />} />
 							<Route path='/profile' component={Profile} />} />
 							<Route
 								path='/app-information'

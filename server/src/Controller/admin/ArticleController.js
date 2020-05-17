@@ -63,4 +63,33 @@ module.exports = {
 		};
 		return result;
 	},
+	addGoal: async (Request) => {
+		const { body } = Request;
+		return await DB.save('goals', body);
+	},
+	getGoal: async (Request) => {
+		let offset = Request.params.offset || 1;
+		const limit = Request.params.limit || 20;
+		const category_id = Request.query.category_id || 0;
+		offset = (offset - 1) * limit;
+		let conditions = '';
+		if (Request.query.q && Request.query.q !== 'undefined') {
+			const { q } = Request.query;
+			conditions += ` where goals.name like '%${q}%' or categories.name like '%${q}%' `;
+		}
+		if (parseInt(category_id) !== 0) {
+			if (conditions) {
+				conditions += ` and category_id = ${category_id}`;
+			} else {
+				conditions += ` where category_id = ${category_id}`;
+			}
+		}
+		const query = `select goals.*,categories.name as category_name  from goals join categories on (goals.category_id = categories.id)  ${conditions} order by id desc limit ${offset}, ${limit}`;
+		const total = `select count(*) as total from goals join categories on (goals.category_id = categories.id) ${conditions}`;
+		const result = {
+			pagination: await apis.Paginations(total, offset, limit),
+			result: await DB.first(query),
+		};
+		return result;
+	},
 };

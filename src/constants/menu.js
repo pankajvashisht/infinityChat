@@ -60,6 +60,24 @@ const data = [
 		],
 	},
 	{
+		id: 'Goal',
+		icon: 'simple-icon-clock',
+		label: 'Goal',
+		to: '/Goal',
+		subs: [
+			{
+				icon: 'simple-icon-organization',
+				label: 'Goal Listing',
+				to: '/goals',
+			},
+			{
+				icon: 'simple-icon-energy',
+				label: 'Add Goal',
+				to: '/add-goal',
+			},
+		],
+	},
+	{
 		id: 'App Informations',
 		icon: 'iconsminds-monitor---phone',
 		label: 'App Informations',

@@ -91,6 +91,18 @@ export const editUserData = (data) => {
 	return axios.put(`/edit-user`, form);
 };
 
+export const getGoals = (page = 1, limit = 10, q = undefined) => {
+	return axios.get(`/goals/${page}/${limit}?q=${q}`);
+};
+
+export const addGoals = (data) => {
+	return axios.post(`/goals`, data);
+};
+
+export const editGoals = (data) => {
+	return axios.put(`/goals`, data);
+};
+
 export const updateProfile = (data) => {
 	const form = new FormData();
 	form.append('first_name', data.first_name);

@@ -237,10 +237,12 @@ class adminController extends ApiController {
 			'select count(id) as total from categories'
 		);
 		const articles = await DB.first('select count(id) as total from articles');
+		const goals = await DB.first('select count(id) as total from goals');
 		return {
 			total_users: users[0].total,
 			total_categories: categories[0].total,
 			total_articles: articles[0].total,
+			total_goals: goals[0].total,
 		};
 	}
 

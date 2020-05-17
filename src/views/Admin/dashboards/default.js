@@ -11,6 +11,7 @@ const DefaultDashboard = React.memo(() => {
 		total_users: 0,
 		total_categories: 0,
 		total_articles: 0,
+		total_goals: 0,
 	});
 	useEffect(() => {
 		dashBoard()
@@ -73,6 +74,17 @@ const DefaultDashboard = React.memo(() => {
 								/>
 							</NavLink>
 						</Colxx>
+						<Colxx lg='4' xl='4' className='mb-4'></Colxx>
+						<Colxx lg='4' xl='4' className='mb-4'>
+							<NavLink to='/goals'>
+								<GradientWithRadialProgressCard
+									icon='simple-icon-clock'
+									title={`${dashBoardData.total_goals} Goals`}
+									detail={``}
+								/>
+							</NavLink>
+						</Colxx>
+						<Colxx lg='4' xl='4' className='mb-4'></Colxx>
 					</Row>
 				</Colxx>
 			</Row>

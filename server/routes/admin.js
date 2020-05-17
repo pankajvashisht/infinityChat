@@ -36,6 +36,13 @@ router
 	.put(response(ArticleController.addArticle))
 	.delete(response(admin.deleteData));
 
+router
+	.route('/goals/:offset([0-9]+)?/:limit([0-9]+)?')
+	.get(response(ArticleController.getGoal))
+	.post(response(ArticleController.addGoal))
+	.put(response(ArticleController.addGoal))
+	.delete(response(admin.deleteData));
+
 router.post('/admin-profile', response(admin.adminProfile));
 
 router
