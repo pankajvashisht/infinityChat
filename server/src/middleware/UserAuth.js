@@ -1,16 +1,9 @@
 const Db = require('../../libary/sqlBulider');
 const app = require('../../libary/CommanMethod');
 const DB = new Db();
-const passRoute = [
-	'/app-information',
-	'/forgot-password',
-	'/user/login',
-	'/user',
-	'/social-login',
-];
 const UserAuth = async (req, res, next) => {
 	try {
-		if (passRoute.indexOf(req.path) > -1) {
+		if (!res.auth) {
 			return next();
 		}
 		if (!req.headers.hasOwnProperty('authorization_key')) {
@@ -30,6 +23,7 @@ const UserAuth = async (req, res, next) => {
 				'phone',
 				'otp',
 				'password',
+				'country',
 			],
 		});
 		if (user_details) {

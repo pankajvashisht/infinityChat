@@ -6,11 +6,16 @@ const {
 	ArticleController,
 } = require('../src/Controller/v1/index');
 const { userSignup } = require('../src/Request');
-const { UserAuth, cross, Language } = require('../src/middleware/index');
+const {
+	UserAuth,
+	cross,
+	Language,
+	AuthSkip,
+} = require('../src/middleware/index');
 const Apiresponse = require('../libary/ApiResponse');
 const user = new UserController();
 const Chat = new ChatController();
-router.use([cross, Language, UserAuth]);
+router.use([cross, Language, AuthSkip, UserAuth]);
 router.get('/', function (req, res) {
 	res.send(' APi workings ');
 });
