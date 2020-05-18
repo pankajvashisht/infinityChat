@@ -158,7 +158,6 @@ class UserController extends ApiController {
 		let login_details = await DB.find('users', 'first', {
 			conditions: {
 				email: request_data.email,
-				status: 1,
 			},
 			fields: ['id', 'password', 'status', 'email'],
 		});
