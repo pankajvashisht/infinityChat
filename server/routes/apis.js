@@ -26,4 +26,8 @@ router.get('/app-information', Apiresponse(user.appInfo));
 router.get('/articles', Apiresponse(ArticleController.getArticle));
 router.get('/categories', Apiresponse(ArticleController.allCategory));
 router.get('/goals', Apiresponse(ArticleController.getGoal));
+router.get(
+	'/category_details/:category_id([0-9]+)',
+	Apiresponse(ArticleController.categoryDetails)
+);
 module.exports = router;
