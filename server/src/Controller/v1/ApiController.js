@@ -111,6 +111,16 @@ class ApiController {
 			return false;
 		}
 	}
+	async QueryPaginations(table, page, limit) {
+		const totalRecord = await DB.first(table);
+		const totalPage = Math.round(totalRecord[0].total / limit, 0) || 1;
+		return {
+			currentPage: page + 1,
+			totalPage,
+			totalRecord: totalRecord[0].total,
+			limit,
+		};
+	}
 	async Paginations(table, condition, page, limit) {
 		delete condition.limit;
 		delete condition.orderBy;

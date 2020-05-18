@@ -17,7 +17,7 @@ module.exports = {
 		const query = `select * from categories ${conditions} order by id desc limit ${offset}, ${limit}`;
 		const total = `select count(*) as total from categories ${conditions}`;
 		const result = {
-			pagination: await apis.Paginations(total, offset, limit),
+			pagination: await apis.QueryPaginations(total, offset, limit),
 			result: app.addUrl(await DB.first(query), 'image'),
 		};
 		return {
@@ -44,7 +44,7 @@ module.exports = {
 		const query = `select articles.*,categories.name as category_name  from articles join categories on (articles.category_id = categories.id)  ${conditions} order by id desc limit ${offset}, ${limit}`;
 		const total = `select count(*) as total from articles join categories on (articles.category_id = categories.id) ${conditions}`;
 		const result = {
-			pagination: await apis.Paginations(total, offset, limit),
+			pagination: await apis.QueryPaginations(total, offset, limit),
 			result: app.addUrl(await DB.first(query), 'image'),
 		};
 		return {
@@ -71,7 +71,7 @@ module.exports = {
 		const query = `select goals.*,categories.name as category_name  from goals join categories on (goals.category_id = categories.id)  ${conditions} order by id desc limit ${offset}, ${limit}`;
 		const total = `select count(*) as total from goals join categories on (goals.category_id = categories.id) ${conditions}`;
 		const result = {
-			pagination: await apis.Paginations(total, offset, limit),
+			pagination: await apis.QueryPaginations(total, offset, limit),
 			result: await DB.first(query),
 		};
 		return {
