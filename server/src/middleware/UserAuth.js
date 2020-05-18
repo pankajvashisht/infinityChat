@@ -35,9 +35,7 @@ const UserAuth = async (req, res, next) => {
 		if (user_details) {
 			req.body.user_id = user_details.id;
 			req.body.userInfo = user_details;
-			if (req.path === '/user/verify' || user_details.status === 1) {
-				return next();
-			}
+			return next();
 		}
 		throw { code: 401, message: 'Invaild Authorization' };
 	} catch (err) {
