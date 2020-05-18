@@ -3,6 +3,7 @@ const router = express.Router();
 const {
 	UserController,
 	ChatController,
+	ArticleController,
 } = require('../src/Controller/v1/index');
 const { userSignup } = require('../src/Request');
 const { UserAuth, cross, Language } = require('../src/middleware/index');
@@ -22,11 +23,7 @@ router.post('/change-password', Apiresponse(user.changePassword));
 router.post('/forgot-password', Apiresponse(user.forgotPassword));
 router.post('/logout', Apiresponse(user.logout));
 router.get('/app-information', Apiresponse(user.appInfo));
-router.post('/send-message', Apiresponse(Chat.sendMessage));
-router.get('/get-message', Apiresponse(Chat.getMessage));
-router.get('/last-chat', Apiresponse(Chat.lastChat));
-router.delete('/delete-thread', Apiresponse(Chat.deleteChat));
-router.delete('/delete-message', Apiresponse(Chat.deletesingleMessage));
-router.patch('/read-message/:chat_id([0-9]+)', Apiresponse(Chat.readMessage));
-
+router.get('/articles', Apiresponse(ArticleController.getArticle));
+router.get('/categories', Apiresponse(ArticleController.allCategory));
+router.get('/goals', Apiresponse(ArticleController.getGoal));
 module.exports = router;

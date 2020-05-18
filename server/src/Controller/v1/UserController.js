@@ -24,16 +24,18 @@ class UserController extends ApiController {
 				Request.files.document
 			);
 		}
-		await DB.save('users', RequestData);
+		const userID = await DB.save('users', RequestData);
 		RequestData.lang = Request.lang;
 		setTimeout(() => {
 			this.mails(RequestData);
 		}, 100);
+		const userInfo = await super.userDetails(userID);
+		if (userInfo.profile.length > 0) {
+			userInfo.profile = appURL + 'uploads/' + userInfo.profile;
+		}
 		return {
 			message: lang[Request.lang].signup,
-			data: {
-				authorization_key: RequestData.authorization_key,
-			},
+			data: userInfo,
 		};
 	}
 	async verifyOtp(req) {
