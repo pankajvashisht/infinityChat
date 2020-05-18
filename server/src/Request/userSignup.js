@@ -5,6 +5,7 @@ module.exports = async (Request, res, next) => {
 		name: Request.body.name,
 		email: Request.body.email,
 		phone: Request.body.phone,
+		country: Request.body.country,
 		password: Request.body.password,
 		checkexist: 1,
 	};

@@ -162,6 +162,7 @@ class ApiController {
 				'phone',
 				'about_us',
 				'profile',
+				'country',
 				'authorization_key',
 			],
 		});

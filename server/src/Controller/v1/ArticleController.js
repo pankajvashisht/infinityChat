@@ -79,4 +79,20 @@ module.exports = {
 			data: result,
 		};
 	},
+	categoryDetails: async (Request) => {
+		const { category_id } = Request.params;
+		const goals = await DB.first(
+			`select goals.*,categories.name as category_name  from goals join categories on (goals.category_id = categories.id)  where category_id=${category_id} order by id desc`
+		);
+		const airticles = await DB.first(
+			`select articles.*,categories.name as category_name  from articles join categories on (articles.category_id = categories.id)  where category_id=${category_id} order by id desc`
+		);
+		return {
+			message: 'category detaisl',
+			data: {
+				airticles: app.addUrl(airticles, 'image'),
+				goals,
+			},
+		};
+	},
 };
