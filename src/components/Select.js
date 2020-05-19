@@ -1,9 +1,10 @@
 import React from 'react';
 import propTypes from 'prop-types';
 export const Select = React.forwardRef(
-	({ options, name, onChange, selected, onBlur, onFocus }, ref) => (
+	({ options, name, onChange, selected, onBlur, onFocus, required }, ref) => (
 		<React.Fragment>
 			<select
+				required={required}
 				style={{ height: '45px' }}
 				name={name}
 				defaultValue={selected}
@@ -13,7 +14,7 @@ export const Select = React.forwardRef(
 				ref={ref}
 				className='form-control'
 			>
-				<option>--Please select--</option>
+				<option value=''>--Please select--</option>
 				{options.map((value, key) => {
 					return (
 						<option
