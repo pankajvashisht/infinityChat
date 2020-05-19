@@ -210,14 +210,36 @@ class UserController extends ApiController {
 		};
 		const non_required = {
 			name: req.body.name,
-			description: req.body.description,
+			country: req.body.country,
+			email: req.body.email,
+			phone: req.body.email,
 		};
 		const request_data = await super.vaildation(required, non_required);
+		if (request_data.email) {
+			const checkEmail = await DB.first(
+				`select email from users where email= '${request_data.email}' and id != ${request_data.id} limit 1`
+			);
+			if (checkEmail.length > 0) {
+				throw new ApiError(
+					`this email already register please choice anotherone`,
+					422
+				);
+			}
+		}
+		if (request_data.phone) {
+			const checkPhone = await DB.first(
+				`select phone from users where phone= '${request_data.phone}' and id != ${request_data.id} limit 1`
+			);
+			if (checkPhone.length > 0) {
+				throw new ApiError(
+					`this phone already register please choice anotherone`,
+					422
+				);
+			}
+		}
+
 		if (req.files && req.files.profile) {
 			request_data.profile = await app.upload_pic_with_await(req.files.profile);
-		}
-		if (req.files && req.files.document) {
-			req.document = await app.upload_pic_with_await(req.files.document);
 		}
 		await DB.save('users', request_data);
 		const usersinfo = await super.userDetails(request_data.id);
