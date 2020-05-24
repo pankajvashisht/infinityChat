@@ -120,7 +120,7 @@ module.exports = {
 			message = 'Goal Remove successfully';
 			await DB.first(`delete from user_goals where id = ${setGoalInfo.id} `);
 			await DB.first(
-				`delete from goal_progresses user_goal_id where id = ${setGoalInfo.id} `
+				`delete from goal_progresses where user_goal_id = ${setGoalInfo.id} `
 			);
 		} else {
 			await DB.save('user_goals', requestData);
