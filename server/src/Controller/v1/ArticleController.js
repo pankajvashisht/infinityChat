@@ -145,6 +145,14 @@ module.exports = {
 			},
 		});
 		if (!goalDetails) throw new ApiError('Invaild user goal id', 422);
+		const completeGoal = await DB.first(
+			`select count(id) as total from goal_progresses where user_goal_id = ${user_goal_id} and from_unixtime(date, '%Y%D%M') = from_unixtime(${timeStamp}, '%Y%D%M')`
+		);
+		if (completeGoal.length > 0)
+			throw new ApiError(
+				`this goal already done for this ${requestData.date} date`,
+				400
+			);
 		requestData.date = app.unixTimeStamp(requestData.date);
 		await DB.save('goal_progresses', requestData);
 		return {
