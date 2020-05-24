@@ -229,6 +229,9 @@ module.exports = {
 	get currentTime() {
 		return Math.round(new Date().getTime() / 1000, 0);
 	},
+	unixTimeStamp(date) {
+		return Math.round(new Date(date).getTime() / 1000, 0);
+	},
 };
 
 function POST(apiUrl, data, headers) {

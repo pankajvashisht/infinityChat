@@ -1,6 +1,7 @@
 const ApiController = require('./ApiController');
 const Db = require('../../../libary/sqlBulider');
 const app = require('../../../libary/CommanMethod');
+const ApiError = require('../../Exceptions/ApiError');
 let apis = new ApiController();
 let DB = new Db();
 
@@ -93,6 +94,93 @@ module.exports = {
 				airticles: app.addUrl(airticles, 'image'),
 				goals,
 			},
+		};
+	},
+	setGoal: async (Request) => {
+		const required = {
+			user_id: Request.body.user_id,
+			goal_id: Request.body.goal_id,
+		};
+		const requestData = await apis.vaildation(required, {});
+		const { user_id, goal_id } = requestData;
+		const goalDetails = await DB.find('goals', 'first', {
+			conditions: {
+				id: goal_id,
+			},
+		});
+		if (!goalDetails) throw new ApiError('Invaild goal id', 422);
+		const setGoalInfo = await DB.find('user_goals', 'first', {
+			conditions: {
+				goal_id,
+				user_id,
+			},
+		});
+		let message = '';
+		if (setGoalInfo) {
+			message = 'Goal Remove successfully';
+			await DB.first(`delete from user_goals where id = ${setGoalInfo.id} `);
+			await DB.first(
+				`delete from goal_progresses user_goal_id id = ${setGoalInfo.id} `
+			);
+		} else {
+			await DB.save('user_goals', requestData);
+			message = 'Goal set successfully';
+		}
+		return {
+			message,
+			data: [],
+		};
+	},
+	addProgress: async (Request) => {
+		const required = {
+			user_id: Request.body.user_id,
+			user_goal_id: Request.body.user_goal_id,
+			date: Request.body.date,
+		};
+		const requestData = await apis.vaildation(required, {});
+		const { user_goal_id } = requestData;
+		const goalDetails = await DB.find('user_goals', 'first', {
+			conditions: {
+				id: user_goal_id,
+			},
+		});
+		if (!goalDetails) throw new ApiError('Invaild user goal id', 422);
+		requestData.date = app.unixTimeStamp(requestData.date);
+		await DB.save('goal_progresses');
+		return {
+			message: 'goal completed successfully',
+			data: [],
+		};
+	},
+	getProgress: async (Request) => {
+		let offset = Request.query.offset || 1;
+		const user_id = Request.body.user_id;
+		const { limit, date = app.currentTime } = Request.query.limit || 20;
+		offset = (offset - 1) * limit;
+		const query = `select goals.*  from user_goals join goals on (goals.id = user_goals.goal_id) where user_id=${user_id}  order by id desc limit ${offset}, ${limit}`;
+		const total = `select count(*) as total from from user_goals join goals on (goals.id = user_goals.goal_id) where user_id=${user_id} `;
+		const timeStamp = isNaN(date) ? app.unixTimeStamp(date) : date;
+		const result = {
+			goals: {
+				pagination: await apis.QueryPaginations(total, offset, limit),
+				result: await DB.first(query),
+			},
+		};
+		const completeGoal = await DB.first(
+			`select count(id) from goal_progresses where id = ${user_id} and from_unixtime(date, '%Y%D%M') = from_unixtime(${timeStamp}, '%Y%D%M')`
+		);
+		const completedGoal = completeGoal[0].total;
+		const progress = {
+			completeGoal: completedGoal,
+			pendingGoal: result.goals.pagination.totalRecord - completedGoal,
+			avg: Math.ceil(
+				(result.goals.pagination.totalRecord / completeGoal) * 100
+			),
+		};
+		Object.assign(result, { progress });
+		return {
+			message: 'my goal listing',
+			data: result,
 		};
 	},
 };

@@ -31,6 +31,11 @@ router.get('/app-information', Apiresponse(user.appInfo));
 router.get('/articles', Apiresponse(ArticleController.getArticle));
 router.get('/categories', Apiresponse(ArticleController.allCategory));
 router.get('/goals', Apiresponse(ArticleController.getGoal));
+router.post('/add-goal', Apiresponse(ArticleController.setGoal));
+router
+	.route('/progress')
+	.get(response(ArticleController.getProgress))
+	.post(response(ArticleController.addProgress));
 router.get(
 	'/category_details/:category_id([0-9]+)',
 	Apiresponse(ArticleController.categoryDetails)
