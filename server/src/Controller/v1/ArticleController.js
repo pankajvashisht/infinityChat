@@ -155,7 +155,7 @@ module.exports = {
 	getProgress: async (Request) => {
 		let offset = Request.query.offset || 1;
 		const user_id = Request.body.user_id;
-		const { limit, date = app.currentTime } = Request.query.limit || 20;
+		const { limit = 20, date = app.currentTime } = Request.query.limit || 20;
 		offset = (offset - 1) * limit;
 		const query = `select goals.*  from user_goals join goals on (goals.id = user_goals.goal_id) where user_id=${user_id}  order by id desc limit ${offset}, ${limit}`;
 		const total = `select count(*) as total from user_goals join goals on (goals.id = user_goals.goal_id) where user_id=${user_id} `;
