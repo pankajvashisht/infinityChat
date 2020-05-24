@@ -173,9 +173,9 @@ module.exports = {
 		const progress = {
 			completeGoal: completedGoal,
 			pendingGoal: result.goals.pagination.totalRecord - completedGoal,
-			avg: Math.ceil(
-				(result.goals.pagination.totalRecord / completeGoal) * 100
-			),
+			avg:
+				Math.ceil((result.goals.pagination.totalRecord / completeGoal) * 100) ||
+				0,
 		};
 		Object.assign(result, { progress });
 		return {
