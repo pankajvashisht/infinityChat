@@ -149,6 +149,7 @@ module.exports = {
 		const completeGoal = await DB.first(
 			`select count(id) as total from goal_progresses where user_goal_id = ${user_goal_id} and from_unixtime(date, '%Y%D%M') = from_unixtime(${requestData.date}, '%Y%D%M')`
 		);
+		console.log(completeGoal);
 		if (completeGoal.length > 0)
 			throw new ApiError(`this goal already done for this ${date} date`, 400);
 		await DB.save('goal_progresses', requestData);
