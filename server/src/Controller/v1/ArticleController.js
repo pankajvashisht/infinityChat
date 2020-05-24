@@ -172,15 +172,14 @@ module.exports = {
 			},
 		};
 		const completeGoal = await DB.first(
-			`select count(id) as total from goal_progresses where id = ${user_id} and from_unixtime(date, '%Y%D%M') = from_unixtime(${timeStamp}, '%Y%D%M')`
+			`select count(id) as total from goal_progresses where user_id = ${user_id} and from_unixtime(date, '%Y%D%M') = from_unixtime(${timeStamp}, '%Y%D%M')`
 		);
 		const completedGoal = completeGoal[0].total || 0;
+		const totalRecord = result.goals.pagination.totalRecord;
 		const progress = {
 			completeGoal: completedGoal,
-			pendingGoal: result.goals.pagination.totalRecord - completedGoal,
-			avg:
-				Math.ceil((result.goals.pagination.totalRecord / completeGoal) * 100) ||
-				0,
+			pendingGoal: totalRecord - completedGoal,
+			avg: Math.round((totalRecord / completeGoal) * 100, 1) || 0,
 		};
 		Object.assign(result, { progress });
 		return {
