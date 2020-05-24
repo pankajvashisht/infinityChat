@@ -179,7 +179,7 @@ module.exports = {
 		const progress = {
 			completeGoal: completedGoal,
 			pendingGoal: totalRecord - completedGoal,
-			avg: Math.round((totalRecord / completeGoal) * 100, 1) || 0,
+			totalProgress: Math.round((completeGoal / totalRecord) * 100, 1) || 0,
 		};
 		Object.assign(result, { progress });
 		return {
