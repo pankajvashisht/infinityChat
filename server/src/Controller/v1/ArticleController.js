@@ -146,7 +146,7 @@ module.exports = {
 		});
 		if (!goalDetails) throw new ApiError('Invaild user goal id', 422);
 		requestData.date = app.unixTimeStamp(requestData.date);
-		await DB.save('goal_progresses');
+		await DB.save('goal_progresses', requestData);
 		return {
 			message: 'goal completed successfully',
 			data: [],

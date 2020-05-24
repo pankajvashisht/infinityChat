@@ -230,8 +230,6 @@ module.exports = {
 		return Math.round(new Date().getTime() / 1000, 0);
 	},
 	unixTimeStamp(date) {
-		console.log(new Date(date));
-		console.log(Math.round(new Date(date).getTime() / 1000, 0));
 		return Math.round(new Date(date).getTime() / 1000, 0);
 	},
 };
