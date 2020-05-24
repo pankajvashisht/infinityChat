@@ -157,7 +157,7 @@ module.exports = {
 		const user_id = Request.body.user_id;
 		const { limit = 20, date = app.currentTime } = Request.query.limit || 20;
 		offset = (offset - 1) * limit;
-		const query = `select goals.*  from user_goals join goals on (goals.id = user_goals.goal_id) where user_id=${user_id}  order by id desc limit ${offset}, ${limit}`;
+		const query = `select goals.*,user_goals.id as user_goal_id   from user_goals join goals on (goals.id = user_goals.goal_id) where user_id=${user_id}  order by id desc limit ${offset}, ${limit}`;
 		const total = `select count(*) as total from user_goals join goals on (goals.id = user_goals.goal_id) where user_id=${user_id} `;
 		const timeStamp = isNaN(date) ? app.unixTimeStamp(date) : date;
 		const result = {
