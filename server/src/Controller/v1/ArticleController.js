@@ -82,8 +82,9 @@ module.exports = {
 	},
 	categoryDetails: async (Request) => {
 		const { category_id } = Request.params;
+		const { user_id = 0 } = Request.body;
 		const goals = await DB.first(
-			`select goals.*,categories.name as category_name  from goals join categories on (goals.category_id = categories.id)  where category_id=${category_id} order by id desc`
+			`select goals.*, (select count(id) from user_goals where user_id=${user_id} and goal_id =goals.id) as is_added,categories.name as category_name  from goals join categories on (goals.category_id = categories.id)  where category_id=${category_id} order by id desc`
 		);
 		const airticles = await DB.first(
 			`select articles.*,categories.name as category_name  from articles join categories on (articles.category_id = categories.id)  where category_id=${category_id} order by id desc`
@@ -162,7 +163,7 @@ module.exports = {
 		const user_id = Request.body.user_id;
 		const { limit = 20, date = app.currentTime } = Request.query;
 		offset = (offset - 1) * limit;
-		const query = `select goals.*,user_goals.id as user_goal_id   from user_goals join goals on (goals.id = user_goals.goal_id) where user_id=${user_id}  order by user_goal_id desc limit ${offset}, ${limit}`;
+		const query = `select goals.*,(select count(id) from user_goals where user_id=${user_id} and goal_id =goals.id) as is_added,user_goals.id as user_goal_id   from user_goals join goals on (goals.id = user_goals.goal_id) where user_id=${user_id}  order by user_goal_id desc limit ${offset}, ${limit}`;
 		const total = `select count(*) as total from user_goals join goals on (goals.id = user_goals.goal_id) where user_id=${user_id} `;
 		const timeStamp = isNaN(date) ? app.unixTimeStamp(date) : date;
 		const result = {
