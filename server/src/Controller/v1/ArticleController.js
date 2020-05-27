@@ -181,7 +181,7 @@ module.exports = {
 			},
 		};
 		const completeGoal = await DB.first(
-			`select count(goal_progresses.id) as total from goal_progresses join user_goals on (goal_progresses.user_goal_id = user_goals.id ) where user_id = ${user_id} and from_unixtime(date, '%Y%D%M') = from_unixtime(${timeStamp}, '%Y%D%M')`
+			`select count(goal_progresses.id) as total from goal_progresses join user_goals on (goal_progresses.user_goal_id = user_goals.id ) where goal_progresses.user_id = ${user_id} and from_unixtime(date, '%Y%D%M') = from_unixtime(${timeStamp}, '%Y%D%M')`
 		);
 		const completedGoal = completeGoal[0].total || 0;
 		const totalRecord = result.goals.pagination.totalRecord;
