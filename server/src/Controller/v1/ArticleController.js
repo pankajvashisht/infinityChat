@@ -172,7 +172,7 @@ module.exports = {
 		const { limit = 20, date = app.currentTime } = Request.query;
 		offset = (offset - 1) * limit;
 		const timeStamp = isNaN(date) ? app.unixTimeStamp(date) : date;
-		const query = `select goals.*,(select count(id) from goal_progresses where user_id = ${user_id} and user_goal_id = user_goals.id  and from_unixtime(date, '%Y%D%M') = from_unixtime(${timeStamp}, '%Y%D%M')) as is_done, 1 as is_added,user_goals.id as user_goal_id   from user_goals join goals on (goals.id = user_goals.goal_id) where user_id=${user_id}  order by user_goal_id desc limit ${offset}, ${limit}`;
+		const query = `select goals.*,(select count(id) from goal_progresses where user_id = ${user_id} and user_goal_id = user_goal_id  and from_unixtime(date, '%Y%D%M') = from_unixtime(${timeStamp}, '%Y%D%M')) as is_done, 1 as is_added,user_goals.id as user_goal_id   from user_goals join goals on (goals.id = user_goals.goal_id) where user_id=${user_id}  order by user_goal_id desc limit ${offset}, ${limit}`;
 		const total = `select count(*) as total from user_goals join goals on (goals.id = user_goals.goal_id) where user_id=${user_id} `;
 		const result = {
 			goals: {
