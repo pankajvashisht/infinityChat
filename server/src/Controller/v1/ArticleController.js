@@ -148,13 +148,21 @@ module.exports = {
 		if (!goalDetails) throw new ApiError('Invaild user goal id', 422);
 		requestData.date = app.unixTimeStamp(date);
 		const completeGoal = await DB.first(
-			`select count(id) as total from goal_progresses where user_goal_id = ${user_goal_id} and from_unixtime(date, '%Y%D%M') = from_unixtime(${requestData.date}, '%Y%D%M')`
+			`select id from goal_progresses where user_goal_id = ${user_goal_id} and from_unixtime(date, '%Y%D%M') = from_unixtime(${requestData.date}, '%Y%D%M')`
 		);
-		if (completeGoal[0].total > 0)
-			throw new ApiError(`this goal already done for this ${date} date`, 400);
-		await DB.save('goal_progresses', requestData);
+		let message = '';
+		if (completeGoal.length > 0) {
+			message = 'Goal remove successfully';
+			await DB.first(
+				`delete from goal_progresses where id = ${completeGoal[0].id}`
+			);
+		} else {
+			message = 'goal completed successfully';
+			await DB.save('goal_progresses', requestData);
+		}
+
 		return {
-			message: 'goal completed successfully',
+			message,
 			data: [],
 		};
 	},
@@ -164,7 +172,7 @@ module.exports = {
 		const { limit = 20, date = app.currentTime } = Request.query;
 		offset = (offset - 1) * limit;
 		const timeStamp = isNaN(date) ? app.unixTimeStamp(date) : date;
-		const query = `select goals.*,(select count(id) from goal_progresses where user_id = ${user_id} and goal_id = goals.id  and from_unixtime(date, '%Y%D%M') = from_unixtime(${timeStamp}, '%Y%D%M')) as is_done, 1 as is_added,user_goals.id as user_goal_id   from user_goals join goals on (goals.id = user_goals.goal_id) where user_id=${user_id}  order by user_goal_id desc limit ${offset}, ${limit}`;
+		const query = `select goals.*,(select count(id) from goal_progresses where user_id = ${user_id} and user_goal_id = user_goals.id  and from_unixtime(date, '%Y%D%M') = from_unixtime(${timeStamp}, '%Y%D%M')) as is_done, 1 as is_added,user_goals.id as user_goal_id   from user_goals join goals on (goals.id = user_goals.goal_id) where user_id=${user_id}  order by user_goal_id desc limit ${offset}, ${limit}`;
 		const total = `select count(*) as total from user_goals join goals on (goals.id = user_goals.goal_id) where user_id=${user_id} `;
 		const result = {
 			goals: {
